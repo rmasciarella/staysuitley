@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Shield, Users, Globe, Clock, MapPin, Mail, Phone, ChevronRight, CheckCircle, FileText, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // --- Company Pages ---
 
@@ -88,7 +88,11 @@ export const CareersPage = () => (
           { role: 'Head of Partnerships', dept: 'Business', loc: 'London, UK' },
           { role: 'Customer Success Lead', dept: 'Support', loc: 'Remote' },
         ].map((job, i) => (
-          <div key={i} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-brand-300 hover:shadow-md transition-all flex justify-between items-center cursor-pointer group">
+          <div
+            key={i}
+            onClick={() => alert(`Apply for ${job.role} position. Full application system coming soon!`)}
+            className="bg-white p-6 rounded-xl border border-gray-200 hover:border-brand-300 hover:shadow-md transition-all flex justify-between items-center cursor-pointer group"
+          >
             <div>
               <h4 className="font-bold text-gray-900 group-hover:text-brand-600 transition-colors">{job.role}</h4>
               <p className="text-sm text-gray-500">{job.dept} · {job.loc}</p>
@@ -115,7 +119,11 @@ export const PressPage = () => (
               { date: 'Sep 10, 2024', title: 'New Partnership with Global Luxury Hotel Group Announced' },
               { date: 'Aug 05, 2024', title: 'Travel Trends Report: The Return of the Hotel Service' },
             ].map((news, i) => (
-              <div key={i} className="group cursor-pointer">
+              <div
+                key={i}
+                onClick={() => alert(`Full press release: ${news.title}`)}
+                className="group cursor-pointer"
+              >
                 <span className="text-sm text-brand-600 font-semibold">{news.date}</span>
                 <h3 className="text-xl font-bold text-gray-900 group-hover:underline mt-1">{news.title}</h3>
                 <p className="text-gray-600 mt-2 text-sm">Read the full press release <ArrowRight size={14} className="inline" /></p>
@@ -132,7 +140,10 @@ export const PressPage = () => (
           </a>
           <div className="mt-8 pt-8 border-t border-gray-200">
             <h3 className="font-bold mb-2">Brand Assets</h3>
-            <button className="text-sm bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 font-medium">
+            <button
+              onClick={() => alert('Downloading media kit... (Demo mode)')}
+              className="text-sm bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 font-medium"
+            >
               Download Media Kit (ZIP)
             </button>
           </div>
@@ -159,7 +170,11 @@ export const BlogPage = () => (
           { img: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80', cat: 'Destinations', title: 'A Weekend Guide to Kyoto' },
           { img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80', cat: 'Wellness', title: 'Top 5 Spa Resorts for Digital Detox' },
         ].map((post, i) => (
-          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group">
+          <div
+            key={i}
+            onClick={() => alert(`Read full article: ${post.title}`)}
+            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group"
+          >
             <div className="h-48 overflow-hidden">
               <img src={post.img} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
@@ -182,35 +197,56 @@ export const BlogPage = () => (
 
 // --- Support Pages ---
 
-export const HelpCenterPage = () => (
-  <div className="bg-white min-h-screen">
-    <div className="bg-brand-600 py-20 text-center px-4">
-      <h1 className="text-4xl font-bold text-white mb-6">How can we help?</h1>
-      <div className="max-w-2xl mx-auto relative">
-        <input 
-          type="text" 
-          placeholder="Search for articles (e.g., cancellation, payment, check-in)" 
-          className="w-full pl-6 pr-4 py-4 rounded-full shadow-lg outline-none text-lg"
-        />
-        <button className="absolute right-2 top-2 bg-brand-800 text-white px-6 py-2 rounded-full font-medium hover:bg-brand-900">Search</button>
-      </div>
-    </div>
+export const HelpCenterPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        {[
-          { icon: FileText, title: 'Booking & Payments' },
-          { icon: Shield, title: 'Safety & Security' },
-          { icon: Users, title: 'Account Settings' },
-        ].map((cat, i) => (
-          <div key={i} className="border border-gray-200 p-6 rounded-xl hover:border-brand-500 hover:shadow-md transition-all cursor-pointer text-center">
-            <div className="bg-brand-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-600">
-              <cat.icon size={24} />
-            </div>
-            <h3 className="font-bold text-gray-900">{cat.title}</h3>
-          </div>
-        ))}
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      alert(`Searching for: "${searchQuery}"\n\nResults would appear here with relevant help articles.`);
+    }
+  };
+
+  return (
+    <div className="bg-white min-h-screen">
+      <div className="bg-brand-600 py-20 text-center px-4">
+        <h1 className="text-4xl font-bold text-white mb-6">How can we help?</h1>
+        <div className="max-w-2xl mx-auto relative">
+          <input
+            type="text"
+            placeholder="Search for articles (e.g., cancellation, payment, check-in)"
+            className="w-full pl-6 pr-4 py-4 rounded-full shadow-lg outline-none text-lg"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-2 top-2 bg-brand-800 text-white px-6 py-2 rounded-full font-medium hover:bg-brand-900"
+          >
+            Search
+          </button>
+        </div>
       </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {[
+            { icon: FileText, title: 'Booking & Payments' },
+            { icon: Shield, title: 'Safety & Security' },
+            { icon: Users, title: 'Account Settings' },
+          ].map((cat, i) => (
+            <div
+              key={i}
+              onClick={() => alert(`Showing ${cat.title} articles...`)}
+              className="border border-gray-200 p-6 rounded-xl hover:border-brand-500 hover:shadow-md transition-all cursor-pointer text-center"
+            >
+              <div className="bg-brand-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-600">
+                <cat.icon size={24} />
+              </div>
+              <h3 className="font-bold text-gray-900">{cat.title}</h3>
+            </div>
+          ))}
+        </div>
 
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
       <div className="space-y-4">
@@ -231,7 +267,8 @@ export const HelpCenterPage = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export const SafetyPage = () => (
   <div className="bg-white min-h-screen py-16 px-4">
@@ -334,14 +371,36 @@ export const CancellationPage = () => (
   </div>
 );
 
-export const ContactPage = () => (
-  <div className="bg-white min-h-screen py-16 px-4">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
-      <div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">Get in Touch</h1>
-        <p className="text-gray-600 mb-12">
-          Have a question about a booking, or interested in partnering with us? Fill out the form and we'll be in touch.
-        </p>
+export const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: ''
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.firstName && formData.lastName && formData.email && formData.message) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ firstName: '', lastName: '', email: '', message: '' });
+      }, 3000);
+    } else {
+      alert('Please fill in all fields');
+    }
+  };
+
+  return (
+    <div className="bg-white min-h-screen py-16 px-4">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-6">Get in Touch</h1>
+          <p className="text-gray-600 mb-12">
+            Have a question about a booking, or interested in partnering with us? Fill out the form and we'll be in touch.
+          </p>
 
         <div className="space-y-8">
           <div className="flex items-start gap-4">
@@ -377,33 +436,66 @@ export const ContactPage = () => (
       </div>
 
       <div className="bg-gray-50 p-8 rounded-2xl border border-gray-200">
-        <form className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-bold text-gray-700 block mb-1">First Name</label>
-              <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none" />
+        {submitted ? (
+          <div className="text-center py-12">
+            <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent!</h3>
+            <p className="text-gray-600">We'll get back to you within 24 hours.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-bold text-gray-700 block mb-1">First Name</label>
+                <input
+                  type="text"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-sm font-bold text-gray-700 block mb-1">Last Name</label>
+                <input
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none"
+                  required
+                />
+              </div>
             </div>
             <div>
-              <label className="text-sm font-bold text-gray-700 block mb-1">Last Name</label>
-              <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none" />
+              <label className="text-sm font-bold text-gray-700 block mb-1">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none"
+                required
+              />
             </div>
-          </div>
-          <div>
-            <label className="text-sm font-bold text-gray-700 block mb-1">Email</label>
-            <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none" />
-          </div>
-          <div>
-            <label className="text-sm font-bold text-gray-700 block mb-1">Message</label>
-            <textarea rows={4} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
-          </div>
-          <button type="button" className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg hover:bg-brand-700 transition-colors">
-            Send Message
-          </button>
-        </form>
+            <div>
+              <label className="text-sm font-bold text-gray-700 block mb-1">Message</label>
+              <textarea
+                rows={4}
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 outline-none"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg hover:bg-brand-700 transition-colors">
+              Send Message
+            </button>
+          </form>
+        )}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // --- Legal Pages ---
 

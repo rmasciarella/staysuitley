@@ -209,17 +209,43 @@ const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const locationQuery = searchParams.get('location');
   const typeQuery = searchParams.get('type');
-  
+  const [priceFilters, setPriceFilters] = useState<string[]>([]);
+  const [amenityFilters, setAmenityFilters] = useState<string[]>([]);
+
+  const togglePriceFilter = (range: string) => {
+    setPriceFilters(prev =>
+      prev.includes(range) ? prev.filter(p => p !== range) : [...prev, range]
+    );
+  };
+
+  const toggleAmenityFilter = (amenity: string) => {
+    setAmenityFilters(prev =>
+      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+    );
+  };
+
   // Filter Logic
   const filteredHotels = FEATURED_HOTELS.filter(h => {
     const matchesLocation = !locationQuery || locationQuery === 'All Locations' || h.location.toLowerCase().includes(locationQuery.toLowerCase());
     const matchesType = !typeQuery || h.type === typeQuery;
-    return matchesLocation && matchesType;
+
+    const matchesPrice = priceFilters.length === 0 || priceFilters.some(range => {
+      if (range === 'under200') return h.pricePerNight < 200;
+      if (range === '200-400') return h.pricePerNight >= 200 && h.pricePerNight <= 400;
+      if (range === '400+') return h.pricePerNight > 400;
+      return true;
+    });
+
+    const matchesAmenities = amenityFilters.length === 0 || amenityFilters.every(filter =>
+      h.amenities.some(amenity => amenity.toLowerCase().includes(filter.toLowerCase()))
+    );
+
+    return matchesLocation && matchesType && matchesPrice && matchesAmenities;
   });
 
-  const displayTitle = locationQuery 
+  const displayTitle = locationQuery
     ? `${filteredHotels.length} Properties in ${locationQuery}`
-    : typeQuery 
+    : typeQuery
       ? `${typeQuery} Hotels`
       : 'All Hotels';
 
@@ -230,24 +256,56 @@ const SearchPage: React.FC = () => {
           <SearchWidget compact />
         </div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-           {/* Filters Sidebar (Static for demo) */}
+           {/* Filters Sidebar */}
            <div className="w-full lg:w-64 flex-shrink-0 space-y-8 hidden lg:block">
              <div>
                <h3 className="font-bold text-gray-900 mb-4">Price Range</h3>
                <div className="space-y-2">
-                 <label className="flex items-center gap-2"><input type="checkbox" className="rounded text-brand-600" /> <span className="text-sm text-gray-600">Under $200</span></label>
-                 <label className="flex items-center gap-2"><input type="checkbox" className="rounded text-brand-600" /> <span className="text-sm text-gray-600">$200 - $400</span></label>
-                 <label className="flex items-center gap-2"><input type="checkbox" className="rounded text-brand-600" /> <span className="text-sm text-gray-600">$400+</span></label>
+                 <label className="flex items-center gap-2 cursor-pointer">
+                   <input
+                     type="checkbox"
+                     checked={priceFilters.includes('under200')}
+                     onChange={() => togglePriceFilter('under200')}
+                     className="rounded text-brand-600"
+                   />
+                   <span className="text-sm text-gray-600">Under $200</span>
+                 </label>
+                 <label className="flex items-center gap-2 cursor-pointer">
+                   <input
+                     type="checkbox"
+                     checked={priceFilters.includes('200-400')}
+                     onChange={() => togglePriceFilter('200-400')}
+                     className="rounded text-brand-600"
+                   />
+                   <span className="text-sm text-gray-600">$200 - $400</span>
+                 </label>
+                 <label className="flex items-center gap-2 cursor-pointer">
+                   <input
+                     type="checkbox"
+                     checked={priceFilters.includes('400+')}
+                     onChange={() => togglePriceFilter('400+')}
+                     className="rounded text-brand-600"
+                   />
+                   <span className="text-sm text-gray-600">$400+</span>
+                 </label>
                </div>
              </div>
              <div>
                <h3 className="font-bold text-gray-900 mb-4">Amenities</h3>
                <div className="space-y-2">
                  {Object.keys(AMENITY_ICONS).slice(0,5).map(a => (
-                   <label key={a} className="flex items-center gap-2"><input type="checkbox" className="rounded text-brand-600" /> <span className="text-sm text-gray-600">{a}</span></label>
+                   <label key={a} className="flex items-center gap-2 cursor-pointer">
+                     <input
+                       type="checkbox"
+                       checked={amenityFilters.includes(a)}
+                       onChange={() => toggleAmenityFilter(a)}
+                       className="rounded text-brand-600"
+                     />
+                     <span className="text-sm text-gray-600">{a}</span>
+                   </label>
                  ))}
                </div>
              </div>
